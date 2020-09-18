@@ -1,0 +1,19 @@
+{
+  "name": "django-the-easy-way",
+  "version": "1.0.0",
+  "description": "Book based blog project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "node-sass -w static/css/base.scss -o static/css --output-style compressed",
+    "sync": "browser-sync start --proxy \"localhost:8000\" --files \"static/css/base.css\" \"templates/*/*.html\" --no-notify --no-open --reload-delay 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browser-sync": "^2.26.12",
+    "node-sass": "^4.14.1",
+    "normalize.css": "^8.0.1"
+  }
+}

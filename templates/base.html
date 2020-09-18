@@ -3,28 +3,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <title>Site</title>
 </head>
 <body>
-<ul class="menu">
-    <li>
-        <a class="{% if section == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-    </li>
-    {% if perms.blog.add_post %}
-    <li>
-        <a class="{% if section == 'blog_create' %}active{% endif %}" href="{% url 'blog:create' %}">Add new post</a>
-    </li>
-    {% endif %}
-    <li>
-        {% if not user.is_authenticated %}
-            <a href="{% url 'account_login' %}">Sign in</a>
-        {% else %}
-            <a href="{% url 'account_logout' %}">Sign out</a>
-        {% endif %}
-    </li>
 
-</ul>
+<div class="header">
+    <div class="header-top">
+        <div class="header-brand">Site</div>
+        <ul class="header-menu">
+            <li class="header-menu-li">
+                <a class="header-menu-a {% if section == 'home' %} header-menu-a-active {% endif %}"
+                   href="{% url 'home' %}">Home</a>
+            </li>
+            {% if perms.blog.add_post %}
+            <li class="header-menu-li">
+                <a class="header-menu-a {% if section == 'blog_create' %} header-menu-a-active {% endif %}"
+                   href="{% url 'blog:create' %}">Add new post</a>
+            </li>
+            {% endif %}
+        </ul>
+        <div class="header-account">
+        {% if not user.is_authenticated %}
+            <a class="header-account-a" href="{% url 'account_login' %}">Login</a>
+            {% else %}
+            <a class="header-account-a" href="{% url 'account_logout' %}">Logout</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="header-bottom">
+        <div class="header-bottom-content">
+            Site
+        </div>
+    </div>
+</div>
 
 {% block title %}{% endblock %}
 
