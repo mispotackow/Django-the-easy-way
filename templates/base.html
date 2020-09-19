@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <title>Site</title>
 </head>
@@ -39,10 +42,19 @@
     </div>
 </div>
 
-{% block title %}{% endblock %}
+<div class="main">
+    <div class="content">
+        {% block title %}{% endblock %}
+        {% block content %}Some default content{% endblock %}
+    </div>
 
-<p>{% block content %}Some default content{% endblock %}</p>
+    <div class="sidebar">
+        <div class="sidebar-ad">Advertisement</div>
+<!--        Если ее не видно отключите adblock-->
+        {% include 'blog/_post_list.html' with heading='Latest posts' %}
+    </div>
 
-{% include 'blog/_post_list.html' with heading='Latest posts' %}
+</div>
+
 </body>
 </html>

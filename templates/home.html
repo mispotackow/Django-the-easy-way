@@ -9,17 +9,7 @@
     {% endif %}
 
     {% for post in posts %}
-
-        <a href="{{ post.get_absolute_url }}">{{ post.pk }} : {{ post }}</a>
-
-        {% if perms.blog.change_post %}
-            [ <a href="{% url 'blog:edit' pk=post.pk %}">Edit</a> ]
-        {% endif %}
-
-        {% if perms.blog.delete_post %}
-            [ <a href="{% url 'blog:delete' pk=post.pk %}">Delete</a> ]
-        {% endif %}
-        <br>
+        {% include 'blog/_post.html' with post=post %}
     {% endfor %}
 
     {% include '_pagination.html' with items=posts %}
