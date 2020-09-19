@@ -20,12 +20,13 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#i!ze(6lj6e=3c(qzy51e=r3g=_2-^gg^-pc$7a2=5_y9z@q&j'
+# SECRET_KEY = 'i!ze(6lj6e=3c(qzy51e=r3g=_2-^gg^-pc$7a2=5_y9z@q&j'
+SECRET_KEY = 'SECRET_KEY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -136,3 +137,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+ENV = os.environ.get('ENV')
+
+if ENV == 'production':
+    ALLOWED_HOSTS = ['.herokuapp.com']
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    DEBUG = int(os.environ.get('DEBUG'))
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
