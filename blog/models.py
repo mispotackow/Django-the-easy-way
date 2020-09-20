@@ -18,7 +18,6 @@ class Post(models.Model):
     image = models.ImageField(default='', blank=True, upload_to='images')
     image_thumbnail = ImageSpecField(source='image', processors=[ResizeToFill(700, 150)],
                                      format='JPEG', options={'quality': 60})
-    test_field = models.TextField(default='', blank=True)
 
     def __str__(self):
         return self.title

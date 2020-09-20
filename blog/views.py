@@ -2,8 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from taggit.models import Tag
 from django.core.paginator import Paginator
-from .models import Post
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from rest_framework.pagination import PageNumberPagination
 
+from .models import Post
+from .serializers import PostSerializer
 from .forms import PostForm, PostDeleteForm
 
 
@@ -87,3 +93,58 @@ def delete(request, pk=None):
                    'form': form,
                    'post': post,
                    })
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def blog_api_view(request):
+    if request.method == 'GET':
+        paginator = PageNumberPagination()
+        paginator.page_size = 5
+        post_objects = Post.objects.all()
+        result = paginator.paginate_queryset(post_objects, request)
+
+        # serializer без пагинации
+        #serializer = PostSerializer(Post.objects.all(), many=True)
+        serializer = PostSerializer(result, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def blog_api_detail_view(request, pk=None):
+    try:
+        post = Post.objects.get(pk=pk)
+    except post.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'GET':
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = PostSerializer(post, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(post.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# для дополнительной настройки если IsAuthenticated не подходит
+# @permission_classes([CustomPermission])
+class CustomPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.has_perm('mysite.add_post'):
+            return True
+        return True
